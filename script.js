@@ -1,4 +1,3 @@
-// 1. AKKORDEON LOGIK (Kategorien öffnen/schließen)
 document.querySelectorAll('.accordion-btn').forEach(button => {
     button.addEventListener('click', () => {
         const content = button.nextElementSibling;
@@ -27,16 +26,20 @@ document.querySelectorAll('.quantity-controls').forEach(control => {
     const name = card.querySelector('h3').innerText;
     const price = parseFloat(card.querySelector('.price').innerText.replace('$', ''));
 
-    plusBtn.onclick = (e) => {
+    // Benutze 'click' aber stelle sicher, dass es auf iOS nicht blockiert wird
+    plusBtn.addEventListener('click', (e) => {
+        e.preventDefault();
         e.stopPropagation();
         updateQuantity(name, 1, price);
-    };
+    }, { passive: false });
 
-    minusBtn.onclick = (e) => {
+    minusBtn.addEventListener('click', (e) => {
+        e.preventDefault();
         e.stopPropagation();
         updateQuantity(name, -1, price);
-    };
+    }, { passive: false });
 });
+
 
 // 3. DIE ZENTRALE FUNKTION (Ändert Mengen überall)
 function updateQuantity(name, change, price) {
@@ -102,10 +105,15 @@ function updateCartBar() {
 function renderModal() {
     const list = document.getElementById('cart-items-list');
     const totalSum = document.getElementById('total-sum');
+    
+    if (!list) return; // Sicherheits-Check
+    
     list.innerHTML = '';
     let grandTotal = 0;
 
     const items = Object.keys(cart);
+    
+    // Wenn der Warenkorb leer ist, Modal schließen
     if (items.length === 0) {
         document.getElementById('cart-modal').style.display = 'none';
         return;
@@ -118,23 +126,33 @@ function renderModal() {
 
         const row = document.createElement('div');
         row.className = "modal-item-row";
-        row.style.display = "flex";
-        row.style.justifyContent = "space-between";
-        row.style.alignItems = "center";
-        row.style.padding = "10px 0";
-        row.style.borderBottom = "1px solid #eee";
-
+        
+        // Wir nutzen hier Klassen für die Buttons, statt onclick direkt im HTML
         row.innerHTML = `
-            <span style="flex:2; font-weight:600;">${name}</span>
-            <div style="display:flex; align-items:center; gap:10px; flex:1; justify-content:center;">
-                <button onclick="updateQuantity('${name}', -1, ${item.price})" style="cursor:pointer; width:30px; border-radius:5px; border:1px solid #ddd;">-</button>
-                <span style="font-weight:bold;">${item.quantity}</span>
-                <button onclick="updateQuantity('${name}', 1, ${item.price})" style="cursor:pointer; width:30px; border-radius:5px; border:1px solid #ddd;">+</button>
+            <span style="flex:2; font-weight:600; font-size: 0.9rem;">${name}</span>
+            <div style="display:flex; align-items:center; gap:12px; flex:1; justify-content:center;">
+                <button class="modal-qty-btn minus-btn" data-name="${name}">-</button>
+                <span style="font-weight:bold; min-width:20px; text-align:center;">${item.quantity}</span>
+                <button class="modal-qty-btn plus-btn" data-name="${name}">+</button>
             </div>
-            <span style="flex:1; text-align:right; font-weight:bold;">$${rowTotal.toFixed(2)}</span>
+            <span style="flex:1; text-align:right; font-weight:bold; font-size: 0.9rem;">$${rowTotal.toFixed(2)}</span>
         `;
         list.appendChild(row);
     });
+
+    // WICHTIG FÜR IPHONE: Event Listener manuell hinzufügen
+    list.querySelectorAll('.modal-qty-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const name = btn.getAttribute('data-name');
+            const isPlus = btn.classList.contains('plus-btn');
+            const change = isPlus ? 1 : -1;
+            
+            // Die Hauptfunktion aufrufen
+            updateQuantity(name, change, cart[name].price);
+        });
+    });
+
     if(totalSum) totalSum.innerText = `$${grandTotal.toFixed(2)}`;
 }
 
