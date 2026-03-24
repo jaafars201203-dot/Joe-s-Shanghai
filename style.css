@@ -220,4 +220,10 @@ input, textarea, select {
 .modal-qty-btn:active {
     background: #e0e0e0;
 }
+.order-link {
+    position: relative;
+    z-index: 10; /* Damit er immer obenauf liegt */
+    display: inline-block;
+}
+
 
