@@ -169,16 +169,26 @@
 
     <div id="cart-modal" class="modal">
         <div class="modal-content">
-            <div class="modal-header"><h2>Your Selection</h2><span class="close-modal">&times;</span></div>
+            <div class="modal-header">
+                <h2>Your Selection</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            
             <div id="cart-items-list" class="modal-body"></div>
-          <div style="padding: 15px; border-top: 1px solid #eee; background: #fdfdfd;">
-    <label style="font-size: 0.8rem; font-weight: 600; color: #666; display: block; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">
-        <i class="fas fa-comment-dots" style="color: #cc0000; margin-right: 5px;"></i> Special Instructions:
-    </label>
-    <textarea id="order-instructions" placeholder="No onions, extra spicy, sauce on the side..." 
-        style="width: 100%; border: 1px solid #ddd; border-radius: 10px; padding: 12px; font-family: 'Poppins', sans-serif; font-size: 0.9rem; resize: none; height: 70px; transition: border-color 0.3s;"></textarea>
-</div>
 
+            <div style="padding: 15px; border-top: 1px solid #eee; background: #fdfdfd;">
+                <label style="font-size: 0.75rem; font-weight: 600; color: #666; display: block; margin-bottom: 8px; text-transform: uppercase;">
+                    <i class="fas fa-comment-dots" style="color: #cc0000; margin-right: 5px;"></i> Special Instructions:
+                </label>
+                <textarea id="order-instructions" placeholder="No onions, extra spicy..." 
+                    style="width: 100%; border: 1px solid #ddd; border-radius: 10px; padding: 12px; font-family: inherit; font-size: 16px; resize: none; height: 60px;"></textarea>
+            </div>
+
+            <div class="modal-footer">
+                <div class="total-price" style="display: flex; justify-content: space-between; font-weight: bold; font-size: 1.1rem; margin-bottom: 15px; padding: 0 5px;">
+                    <span>Total:</span>
+                    <span id="total-sum">$0.00</span>
+                </div>
                 <button onclick="finalCheckout()" class="final-btn">Confirm & Pay Securely</button>
             </div>
         </div>
