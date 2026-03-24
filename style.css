@@ -178,3 +178,46 @@ body { font-family: 'Poppins', sans-serif; background-color: #f7f7f7; color: #1a
 .cart-bounce {
     animation: cartBounce 0.3s ease-out;
 }
+
+
+/* Verhindert, dass das iPhone eigene Button-Styles erzwingt */
+button {
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 0; /* Oder dein gewünschter Radius */
+    touch-action: manipulation; /* Macht Klicks auf dem Handy schneller */
+}
+
+/* Verhindert das automatische Zoomen bei Textfeldern auf dem iPhone */
+input, textarea, select {
+    font-size: 16px !important; 
+}
+
+.qty-number {
+    display: inline-block;
+    min-width: 20px;
+    text-align: center;
+    vertical-align: middle;
+    font-family: sans-serif; /* Manchmal hat Poppins auf iOS Probleme mit Zahlen-Abständen */
+}
+
+.modal-qty-btn {
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--red);
+    -webkit-appearance: none; /* iPhone Fix */
+}
+
+.modal-qty-btn:active {
+    background: #e0e0e0;
+}
+
