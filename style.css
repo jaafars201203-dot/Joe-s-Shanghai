@@ -35,12 +35,6 @@ body { font-family: 'Poppins', sans-serif; background-color: #f7f7f7; color: #1a
 
 .accordion-btn span:first-child { flex: 1; text-align: left; }
 
-/* Verhindert, dass Bilder im Dark Mode negativ angezeigt werden */
-@media (prefers-color-scheme: dark) {
-    .accordion-btn img {
-        filter: none !important; /* Stoppt automatische Filter */
-    }
-}
 
 .accordion-btn span:nth-child(2) {
     background: #fdfdfd !important; 
