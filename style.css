@@ -37,7 +37,7 @@ body { font-family: 'Poppins', sans-serif; background-color: #f7f7f7; color: #1a
 
 /* Die runden Icon-Bubbles in den Kategorien */
 .accordion-btn span:nth-child(2) {
-    background: white; border: 1px solid #eee;
+    background:  #f7f7f7; border: 1px solid #eee;
     width: 45px; height: 45px; border-radius: 50%;
     display: flex; justify-content: center; align-items: center;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-right: 15px;
