@@ -11,15 +11,33 @@
 <body>
 
     <header class="hero-header">
-        <div class="hero-overlay">
-            <h1>JOE'S SHANGHAI</h1>
-            <p style="margin-left:5px;">Welcome to JOE'S SHANGHAI. With over 80 dishes for every taste and preference. </p>
-            <p>46 Bowery, New York, NY 10013</p>
-        </div>
+       <div class="hero-overlay">
+    <h1>JOE'S SHANGHAI</h1>
+    <p>Welcome to JOE'S SHANGHAI. With over 80 dishes for every taste.</p>
+    <p>46 Bowery, New York, NY 10013</p>
+    <!-- Dieser Button wird sich gleich verändern -->
+    <button id="about-btn" class="secondary-btn">About Our Story</button>
+</div>
+
+
     </header>
 
     <main class="content-wrapper">
-        
+<section id="about-section" class="about-container" style="display: none;">
+    <div class="about-content">
+        <div class="about-text">
+            <h2>The Legend of Chinatown</h2>
+            <p>Founded in 1995, <strong>Joe's Shanghai</strong> quickly became a culinary landmark in New York City. Famous for our <em>Xiao Long Bao</em> (Soup Dumplings), we bring the authentic, rich taste of Shanghai to the heart of Bowery.</p>
+            <p>Our dedication to quality and tradition has been recognized by the New York Times and countless locals. Every dumpling is a masterpiece, crafted with passion to share the rich heritage of Chinese cuisine with you.</p>
+        </div>
+        <div class="about-image">
+            <img src="https://images.unsplash.com/photo-1582450871972-ab5ca641643d?w=800" alt="Joe's Shanghai Restaurant Interior">
+        </div>
+    </div>
+</section>
+
+    
+    <div id="menu-container">
         <div class="menu-section">
             <button class="accordion-btn"><span>Appetizers</span><span><img style="" src="https://png.pngtree.com/png-clipart/20230417/original/pngtree-appetizer-line-icon-png-image_9063011.png"></span><span class="icon">+</span></button>
             <div class="accordion-content"><div class="items-grid">
@@ -125,7 +143,7 @@
                 <div class="menu-card"><div class="info"><h3>Fanta Orange</h3><span class="price">$2.95</span></div><div class="quantity-controls"><button class="qty-btn minus">-</button><span class="qty-number">0</span><button class="qty-btn plus">+</button></div><div class="img-wrapper"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQwqojij7ooA4G0mS5Cnlcon3kQEN62kaMYZVmqLKcNWGAkH0EYtOCYBc&s=10" alt="Fanta"></div></div>
             </div></div>
         </div>
-
+ </div>
     </main>
 
   <footer class="main-footer">
