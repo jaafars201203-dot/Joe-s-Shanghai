@@ -41,6 +41,7 @@ body { font-family: 'Poppins', sans-serif; background-color: #f7f7f7; color: #1a
     width: 45px; height: 45px; border-radius: 50%;
     display: flex; justify-content: center; align-items: center;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-right: 15px;
+    color-scheme: light;
 }
 
 .accordion-btn img {
