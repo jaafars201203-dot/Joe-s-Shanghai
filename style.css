@@ -35,18 +35,30 @@ body { font-family: 'Poppins', sans-serif; background-color: #f7f7f7; color: #1a
 
 .accordion-btn span:first-child { flex: 1; text-align: left; }
 
-/* Die runden Icon-Bubbles in den Kategorien */
-.accordion-btn span:nth-child(2) {
-    background:  #f7f7f7; border: 1px solid #eee;
-    width: 45px; height: 45px; border-radius: 50%;
-    display: flex; justify-content: center; align-items: center;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-right: 15px;
-    color-scheme: light;
+/* Verhindert, dass Bilder im Dark Mode negativ angezeigt werden */
+@media (prefers-color-scheme: dark) {
+    .accordion-btn img {
+        filter: none !important; /* Stoppt automatische Filter */
+    }
 }
 
+/* Spezieller Fix für Samsung Internet */
+.accordion-btn span:nth-child(2), 
 .accordion-btn img {
-    width: 28px !important; height: 28px !important;
-    object-fit: contain; mix-blend-mode: multiply; margin: 0 !important;
+    forced-color-adjust: none; /* Deaktiviert erzwungene Systemfarben */
+}
+
+
+.accordion-btn img {
+    width: 28px !important; 
+    height: 28px !important;
+    object-fit: contain; 
+    margin: 0 !important;
+    
+    /* Mix-blend-mode kann im Dark Mode Probleme machen, 
+       wir erzwingen hier die normale Ansicht */
+    mix-blend-mode: multiply !important;
+    filter: brightness(1) !important;
 }
 
 .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; background: #fff; }
