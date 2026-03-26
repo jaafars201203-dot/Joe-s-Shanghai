@@ -336,3 +336,17 @@ input, textarea, select {
     padding: 5px 15px;
     font-size: 0.8rem;
 }
+
+
+/* Verhindert, dass Bilder im Dark Mode negativ angezeigt werden */
+@media (prefers-color-scheme: dark) {
+    .accordion-btn img {
+        filter: none !important; /* Stoppt automatische Filter */
+    }
+}
+
+/* Spezieller Fix für Samsung Internet */
+.accordion-btn span:nth-child(2), 
+.accordion-btn img {
+    forced-color-adjust: none; /* Deaktiviert erzwungene Systemfarben */
+}
