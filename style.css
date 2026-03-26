@@ -53,6 +53,66 @@ body { font-family: 'Poppins', sans-serif; background-color: #f7f7f7; color: #1a
 
 @media (max-width: 700px) { .items-grid { grid-template-columns: 1fr; } }
 
+/* --- ABOUT SECTION STYLING --- */
+.about-container {
+    background-color: #ffffff;
+    /* Ein dezentes Hintergrundmuster (z.B. feine Linien oder Textur) */
+    background-image: url('https://www.transparenttextures.com/patterns/padded-little-squares.png'); 
+    padding: 40px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.about-content {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.about-text {
+    flex: 1;
+    line-height: 1.8;
+}
+
+.about-text h2 {
+    color: var(--red);
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+}
+
+.about-text p {
+    margin-bottom: 15px;
+    color: #444;
+}
+
+.about-image {
+    flex: 1;
+    max-width: 400px;
+}
+
+.about-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    object-fit: cover;
+}
+
+/* Responsivität für Mobile: Text und Bild untereinander */
+@media (max-width: 768px) {
+    .about-content {
+        flex-direction: column-reverse; /* Bild oben, Text unten (oder umgekehrt) */
+        text-align: center;
+    }
+    
+    .about-image {
+        max-width: 100%;
+        margin-bottom: 20px;
+    }
+}
+
+
 /* --- 4. SPEISEN-KARTEN --- */
 .menu-card {
     border: 1px solid #f0f0f0; border-radius: 12px; padding: 12px;
@@ -220,10 +280,58 @@ input, textarea, select {
 .modal-qty-btn:active {
     background: #e0e0e0;
 }
-.order-link {
-    position: relative;
-    z-index: 10; /* Damit er immer obenauf liegt */
-    display: inline-block;
+
+/* Styling für den About Button im Header */
+.secondary-btn {
+    margin-top: 15px;
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.secondary-btn:hover {
+    background: white;
+    color: var(--red);
+}
+
+/* Container für das Menü, damit wir es leicht ausblenden können */
+#menu-container {
+    transition: opacity 0.3s ease;
 }
 
 
+/* --- ZUSATZ-STYLE FÜR DIE ABOUT-ANSICHT --- */
+
+/* Wenn die Story offen ist, wird der Header kleiner */
+.hero-header.hero-mini {
+    height: 120px; /* Kleinere Höhe */
+    transition: height 0.3s ease; /* Sanfter Übergang */
+}
+
+/* Passt das Overlay im kleineren Header an */
+.hero-header.hero-mini .hero-overlay {
+    padding: 10px;
+}
+
+/* Macht die Hauptüberschrift im kleineren Header kleiner */
+.hero-header.hero-mini h1 {
+    font-size: 1.5rem; 
+    margin-bottom: 5px;
+}
+
+/* Versteckt die Adresse im kleineren Header, um Platz zu sparen */
+.hero-header.hero-mini p {
+    display: none;
+}
+
+/* Sorgt dafür, dass der Button im kleineren Header gut aussieht */
+.hero-header.hero-mini #about-btn {
+    margin-top: 5px;
+    padding: 5px 15px;
+    font-size: 0.8rem;
+}
