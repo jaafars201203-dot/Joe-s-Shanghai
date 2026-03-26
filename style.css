@@ -42,37 +42,36 @@ body { font-family: 'Poppins', sans-serif; background-color: #f7f7f7; color: #1a
     }
 }
 
-/* Spezieller Fix für Samsung Internet */
 .accordion-btn span:nth-child(2) {
-    /* Ein ganz leichtes Grau, das der Dark Mode oft ignoriert */
-    background-color: #e8e8e8 !important; 
-    border: 1px solid #ddd;
-    
-    /* Festgelegte Maße */
-    width: 45px !important; 
-    height: 45px !important; 
-    min-width: 45px; /* Verhindert das Schrumpfen */
-    
-    border-radius: 50% !important;
-    display: flex !important; 
+    background: #fdfdfd !important; 
+    border: 1px solid #eee;
+    width: 45px; 
+    height: 45px; 
+    border-radius: 50%;
+    display: flex; 
     justify-content: center; 
     align-items: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
     margin-right: 15px;
-    
-    /* Entferne alle komplizierten Filter, die das Element "löschen" könnten */
-    filter: none !important;
-    opacity: 1 !important;
-    visibility: visible !important;
+
+    /* --- DER TRICK FÜR SAMSUNG --- */
+    filter: brightness(1) !important; 
+    -webkit-filter: brightness(1) !important;
+    isolation: isolate; /* Erzeugt einen eigenen Layer */
 }
 
 .accordion-btn img {
     width: 28px !important; 
     height: 28px !important;
-    object-fit: contain;
-    /* Damit das Bild auf dem grauen Kreis sauber aussieht */
-    mix-blend-mode: multiply !important; 
-    display: block !important;
+    object-fit: contain; 
+    margin: 0 !important;
+    
+    /* Mix-blend-mode kann im Dark Mode Probleme machen, 
+       wir erzwingen hier die normale Ansicht */
+    mix-blend-mode: multiply !important;
+    filter: brightness(1) !important;
 }
+
 
 .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; background: #fff; }
 .items-grid { padding: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
