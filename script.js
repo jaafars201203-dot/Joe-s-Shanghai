@@ -1,7 +1,4 @@
-// 1. Warenkorb-Speicher
-let cart = {}; 
-
-// 2. Accordion-Logik (Kategorien öffnen/schließen)
+// 1. AKKORDEON LOGIK (Kategorien öffnen/schließen)
 document.querySelectorAll('.accordion-btn').forEach(button => {
     button.addEventListener('click', () => {
         const content = button.nextElementSibling;
@@ -9,42 +6,43 @@ document.querySelectorAll('.accordion-btn').forEach(button => {
 
         if (content.style.maxHeight) {
             content.style.maxHeight = null;
-            if(icon) icon.textContent = "+";
+            icon.textContent = "+";
         } else {
-            // Andere schließen
             document.querySelectorAll('.accordion-content').forEach(c => c.style.maxHeight = null);
             document.querySelectorAll('.icon').forEach(i => i.textContent = "+");
-            // Dieses öffnen
             content.style.maxHeight = content.scrollHeight + "px";
-            if(icon) icon.textContent = "-";
+            icon.textContent = "-";
         }
     });
 });
 
-// 3. Mengen-Steuerung Initialisierung
-// Wir suchen alle Plus/Minus Buttons direkt in den Karten
-document.querySelectorAll('.menu-card').forEach(card => {
-    const minusBtn = card.querySelector('.minus');
-    const plusBtn = card.querySelector('.plus');
+let cart = {}; // Speichert { "Gerichtname": { price: 15.95, quantity: 2 } }
+
+// 2. INITIALISIERUNG DER MENÜ-BUTTONS (- 0 +)
+document.querySelectorAll('.quantity-controls').forEach(control => {
+    const minusBtn = control.querySelector('.minus');
+    const plusBtn = control.querySelector('.plus');
+    
+    const card = control.closest('.menu-card');
     const name = card.querySelector('h3').innerText;
     const price = parseFloat(card.querySelector('.price').innerText.replace('$', ''));
 
-    if(plusBtn) {
-        plusBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            updateQuantity(name, 1, price);
-        });
-    }
+    // Benutze 'click' aber stelle sicher, dass es auf iOS nicht blockiert wird
+    plusBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        updateQuantity(name, 1, price);
+    }, { passive: false });
 
-    if(minusBtn) {
-        minusBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            updateQuantity(name, -1, price);
-        });
-    }
+    minusBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        updateQuantity(name, -1, price);
+    }, { passive: false });
 });
 
-// 4. Die zentrale Rechen-Funktion
+
+// 3. DIE ZENTRALE FUNKTION (Ändert Mengen überall)
 function updateQuantity(name, change, price) {
     if (!cart[name]) {
         cart[name] = { price: price, quantity: 0 };
@@ -54,57 +52,69 @@ function updateQuantity(name, change, price) {
 
     if (cart[name].quantity <= 0) {
         delete cart[name];
-        updateDisplay(name, 0);
+        syncMenuDisplay(name, 0); // Setzt Anzeige im Menü auf 0
     } else {
-        updateDisplay(name, cart[name].quantity);
+        syncMenuDisplay(name, cart[name].quantity);
     }
     
     updateCartBar();
-    
-    // Falls das Modal offen ist, direkt neu zeichnen
+
     if (document.getElementById('cart-modal').style.display === 'block') {
         renderModal();
     }
 }
 
-// 5. Anzeige im Menü aktualisieren (NUR für das eine Gericht!)
-function updateDisplay(name, qty) {
+// 4. HILFSFUNKTION: Anzeige im Menü synchronisieren
+function syncMenuDisplay(name, qty) {
     document.querySelectorAll('.menu-card').forEach(card => {
         if (card.querySelector('h3').innerText === name) {
-            const qtyNum = card.querySelector('.qty-number');
-            if(qtyNum) qtyNum.innerText = qty;
+            const qtyDisplay = card.querySelector('.qty-number');
+            if (qtyDisplay) qtyDisplay.innerText = qty;
         }
     });
 }
 
-// 6. Roter Balken unten
+// 5. ROTEN BALKEN AKTUALISIEREN
+// Diesen Block stattdessen einfügen:
 function updateCartBar() {
     const bar = document.getElementById('cart-bar');
     const countSpan = document.getElementById('cart-count');
+    
     let totalItems = 0;
-
-    for (let id in cart) {
-        totalItems += cart[id].quantity;
+    for (let name in cart) {
+        totalItems += cart[name].quantity;
     }
 
     if(countSpan) countSpan.innerText = totalItems;
+    
     if(bar) {
-        bar.style.display = totalItems > 0 ? 'flex' : 'none';
-        // Animation
-        bar.classList.remove('cart-bounce');
-        void bar.offsetWidth; 
-        bar.classList.add('cart-bounce');
+        if (totalItems > 0) {
+            bar.style.display = 'flex';
+            
+            // Animation auslösen:
+            bar.classList.remove('cart-bounce');
+            void bar.offsetWidth; // Kurzer technischer Trick, um die Animation neu zu starten
+            bar.classList.add('cart-bounce');
+        } else {
+            bar.style.display = 'none';
+        }
     }
 }
 
-// 7. Modal (Warenkorb) anzeigen
+
+// 6. WARENKORB-INHALT ZEICHNEN (MODAL)
 function renderModal() {
     const list = document.getElementById('cart-items-list');
     const totalSum = document.getElementById('total-sum');
+    
+    if (!list) return; // Sicherheits-Check
+    
     list.innerHTML = '';
     let grandTotal = 0;
 
     const items = Object.keys(cart);
+    
+    // Wenn der Warenkorb leer ist, Modal schließen
     if (items.length === 0) {
         document.getElementById('cart-modal').style.display = 'none';
         return;
@@ -117,45 +127,112 @@ function renderModal() {
 
         const row = document.createElement('div');
         row.className = "modal-item-row";
+        
+        // Wir nutzen hier Klassen für die Buttons, statt onclick direkt im HTML
         row.innerHTML = `
-            <span style="flex:2; font-weight:600;">${name}</span>
-            <div style="display:flex; align-items:center; gap:10px; flex:1; justify-content:center;">
-                <button class="m-btn" data-name="${name}" data-ch="-1">-</button>
-                <span style="font-weight:bold;">${item.quantity}</span>
-                <button class="m-btn" data-name="${name}" data-ch="1">+</button>
+            <span style="flex:2; font-weight:600; font-size: 0.9rem;">${name}</span>
+            <div style="display:flex; align-items:center; gap:12px; flex:1; justify-content:center;">
+                <button class="modal-qty-btn minus-btn" data-name="${name}">-</button>
+                <span style="font-weight:bold; min-width:20px; text-align:center;">${item.quantity}</span>
+                <button class="modal-qty-btn plus-btn" data-name="${name}">+</button>
             </div>
-            <span style="flex:1; text-align:right; font-weight:bold;">$${rowTotal.toFixed(2)}</span>
+            <span style="flex:1; text-align:right; font-weight:bold; font-size: 0.9rem;">$${rowTotal.toFixed(2)}</span>
         `;
         list.appendChild(row);
     });
 
-    // Klicks im Modal
-    list.querySelectorAll('.m-btn').forEach(b => {
-        b.addEventListener('click', () => {
-            const n = b.getAttribute('data-name');
-            const c = parseInt(b.getAttribute('data-ch'));
-            updateQuantity(n, c, cart[n].price);
+    // WICHTIG FÜR IPHONE: Event Listener manuell hinzufügen
+    list.querySelectorAll('.modal-qty-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const name = btn.getAttribute('data-name');
+            const isPlus = btn.classList.contains('plus-btn');
+            const change = isPlus ? 1 : -1;
+            
+            // Die Hauptfunktion aufrufen
+            updateQuantity(name, change, cart[name].price);
         });
     });
 
     if(totalSum) totalSum.innerText = `$${grandTotal.toFixed(2)}`;
 }
 
-// 8. Buttons binden
-document.getElementById('view-order-btn').onclick = () => {
-    renderModal();
-    document.getElementById('cart-modal').style.display = 'block';
-};
+// 7. EVENT LISTENER FÜR BUTTONS
+const viewBtn = document.getElementById('view-order-btn');
+if(viewBtn) {
+    viewBtn.onclick = () => {
+        renderModal();
+        document.getElementById('cart-modal').style.display = 'block';
+    };
+}
 
-document.querySelector('.close-modal').onclick = () => {
-    document.getElementById('cart-modal').style.display = 'none';
-};
+const closeBtn = document.querySelector('.close-modal');
+if(closeBtn) {
+    closeBtn.onclick = () => {
+        document.getElementById('cart-modal').style.display = 'none';
+    };
+}
 
-// 9. Checkout Funktion
+// 8. FINAL CHECKOUT
+// Füge das hier neu ein:
 window.finalCheckout = function() {
-    const inst = document.getElementById('order-instructions')?.value || "";
-    let msg = "Redirecting to payment...";
-    if (inst.trim() !== "") msg += "\n\nNote: " + inst;
-    alert(msg);
+    // Holt sich den Text aus dem neuen Textfeld
+    const instructions = document.getElementById('order-instructions') ? document.getElementById('order-instructions').value : "";
+    
+    let message = "Almost there! You are being redirected to our secure external payment page.";
+    
+    // Wenn der Nutzer etwas reingeschrieben hat, zeigen wir es in der Bestätigung an
+    if (instructions.trim() !== "") {
+        message += "\n\nYour note for the chef: \"" + instructions + "\"";
+    }
+    
+    alert(message + "\n\nThank you for choosing Joe's Shanghai!");
     window.location.href = "https://order.toasttab.com/online/joes-shanghai";
 };
+
+// --- DYNAMISCHE ABOUT/MENU LOGIK (KORRIGIERTES SCROLLEN) ---
+const aboutBtn = document.getElementById('about-btn');
+const aboutSection = document.getElementById('about-section');
+const menuContainer = document.getElementById('menu-container');
+const heroHeader = document.querySelector('.hero-header'); // Wir brauchen auch den Header
+
+let isStoryOpen = false; // Zustand merken
+
+aboutBtn.addEventListener('click', () => {
+    if (!isStoryOpen) {
+        // --- STORY ANZEIGEN ---
+        menuContainer.style.display = 'none';
+        aboutSection.style.display = 'block';
+        
+        // Header kleiner machen (Klasse im CSS hinzufügen)
+        heroHeader.classList.add('hero-mini');
+        
+        // Button-Text ändern & Style anpassen
+        aboutBtn.innerText = "Back to the Menu";
+        aboutBtn.style.background = "white";
+        aboutBtn.style.color = "var(--red)";
+        
+        isStoryOpen = true;
+        
+        // WICHTIG: Weniger weit scrollen (nur 50px von oben)
+        window.scrollTo({ top: 350, behavior: 'smooth' });
+        
+    } else {
+        // --- ZURÜCK ZUM MENÜ ---
+        menuContainer.style.display = 'block';
+        aboutSection.style.display = 'none';
+        
+        // Header wieder normal machen
+        heroHeader.classList.remove('hero-mini');
+        
+        // Button-Text zurücksetzen
+        aboutBtn.innerText = "About Our Story";
+        aboutBtn.style.background = "transparent";
+        aboutBtn.style.color = "white";
+        
+        isStoryOpen = false;
+        
+        // WICHTIG: Weniger weit scrollen (nur 50px von oben)
+        window.scrollTo({ top: 5, behavior: 'smooth' });
+    }
+});
