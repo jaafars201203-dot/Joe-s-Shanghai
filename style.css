@@ -43,22 +43,35 @@ body { font-family: 'Poppins', sans-serif; background-color: #f7f7f7; color: #1a
 }
 
 /* Spezieller Fix für Samsung Internet */
-.accordion-btn span:nth-child(2), 
-.accordion-btn img {
-    forced-color-adjust: none; /* Deaktiviert erzwungene Systemfarben */
+.accordion-btn span:nth-child(2) {
+    /* Ein ganz leichtes Grau, das der Dark Mode oft ignoriert */
+    background-color: #e8e8e8 !important; 
+    border: 1px solid #ddd;
+    
+    /* Festgelegte Maße */
+    width: 45px !important; 
+    height: 45px !important; 
+    min-width: 45px; /* Verhindert das Schrumpfen */
+    
+    border-radius: 50% !important;
+    display: flex !important; 
+    justify-content: center; 
+    align-items: center;
+    margin-right: 15px;
+    
+    /* Entferne alle komplizierten Filter, die das Element "löschen" könnten */
+    filter: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
 }
-
 
 .accordion-btn img {
     width: 28px !important; 
     height: 28px !important;
-    object-fit: contain; 
-    margin: 0 !important;
-    
-    /* Mix-blend-mode kann im Dark Mode Probleme machen, 
-       wir erzwingen hier die normale Ansicht */
-    mix-blend-mode: multiply !important;
-    filter: brightness(1) !important;
+    object-fit: contain;
+    /* Damit das Bild auf dem grauen Kreis sauber aussieht */
+    mix-blend-mode: multiply !important; 
+    display: block !important;
 }
 
 .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; background: #fff; }
